@@ -49,28 +49,24 @@ export default function MinesBot() {
 
   const handleJoinTelegram = () => {
     window.open("https://t.me/+LcqojtT8Y302NzZi", "_blank");
-    localStorage.setItem("telegram_joined", "true");
-    setIsTelegramJoined(true);
-    toast({
-      title: "Success",
-      description: "Subscription confirmed!",
-    });
+    localStorage.setItem("telegram_joined_clicked", "true");
   };
 
   const handleCheckRegistration = () => {
     if (!stakeId.trim()) {
       toast({
-        title: "Error",
-        description: "Please enter your Stake ID",
+        title: lang === "RU" ? "Ошибка" : "Error",
+        description: lang === "RU" ? "Пожалуйста, введите ваш Stake ID" : "Please enter your Stake ID",
         variant: "destructive",
       });
       return;
     }
     
-    if (!isTelegramJoined) {
+    const hasClickedJoin = localStorage.getItem("telegram_joined_clicked") === "true";
+    if (!hasClickedJoin) {
       toast({
-        title: "Error",
-        description: "Please subscribe to our Telegram channel first",
+        title: lang === "RU" ? "Ошибка" : "Error",
+        description: lang === "RU" ? "Пожалуйста, сначала подпишитесь на Telegram канал" : "Please subscribe to our Telegram channel first",
         variant: "destructive",
       });
       return;
@@ -80,11 +76,13 @@ export default function MinesBot() {
     setTimeout(() => {
       localStorage.setItem("mines_bot_registered", "true");
       localStorage.setItem("mines_bot_stake_id", stakeId);
+      localStorage.setItem("telegram_joined", "true");
+      setIsTelegramJoined(true);
       setIsRegistered(true);
       setIsChecking(false);
       toast({
-        title: "Success",
-        description: "Registration verified! Access granted.",
+        title: lang === "RU" ? "Успешно!" : "Success",
+        description: lang === "RU" ? "Регистрация подтверждена! Доступ разрешен." : "Registration verified! Access granted.",
       });
     }, 2000);
   };
