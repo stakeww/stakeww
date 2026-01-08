@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import stakeLogo from "@assets/IMG_1152_1767458795544.png";
 import { motion, AnimatePresence } from "framer-motion";
+import confetti from "canvas-confetti";
 
 export default function MinesBot() {
   const [minesCount, setMinesCount] = useState<number>(3);
@@ -208,6 +209,12 @@ export default function MinesBot() {
     getPrediction(minesCount, {
       onSuccess: (data) => {
         setPredictedSpots(data.predictedSpots);
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ["#00e701", "#ffffff", "#00ff00"]
+        });
       },
       onError: (error) => {
         toast({
