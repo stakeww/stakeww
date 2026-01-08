@@ -35,38 +35,111 @@ export default function MinesBot() {
     return () => clearInterval(timer);
   }, []);
 
-  const [isTelegramJoined, setIsTelegramJoined] = useState(() => {
-    return localStorage.getItem("telegram_joined") === "true";
+  const [isRegistered, setIsRegistered] = useState(() => {
+    return localStorage.getItem("mines_bot_registered") === "true";
   });
   const [stakeId, setStakeId] = useState(() => {
     return localStorage.getItem("mines_bot_stake_id") || "";
   });
-  const [isRegistered, setIsRegistered] = useState(() => {
-    return localStorage.getItem("mines_bot_registered") === "true";
-  });
   const [isChecking, setIsChecking] = useState(false);
   const [showIdHint, setShowIdHint] = useState(false);
 
-  const handleJoinTelegram = () => {
-    window.open("https://t.me/+LcqojtT8Y302NzZi", "_blank");
-    localStorage.setItem("telegram_joined_clicked", "true");
+  const [lang, setLang] = useState<"RU" | "EN">("EN");
+
+  const t = {
+    RU: {
+      regRequired: "ТРЕБУЕТСЯ РЕГИСТРАЦИЯ",
+      regDesc: "Для доступа к премиум-сигналам необходимо зарегистрироваться на Stake.com по нашей ссылке.",
+      openStake: "1. ОТКРЫТЬ STAKE.COM",
+      enterId: "2. ВВЕДИТЕ ВАШ STAKE ID",
+      whereToFind: "Где найти?",
+      verify: "ПРОВЕРИТЬ И НАЧАТЬ",
+      verifying: "ПРОВЕРКА...",
+      signalsToday: "Сигналов сегодня",
+      analyzing: "АНАЛИЗ...",
+      getSignal: "GET SIGNAL",
+      calculating: "АНАЛИЗ...",
+      mines: "Мины",
+      recentActivity: "ПОСЛЕДНЯЯ АКТИВНОСТЬ",
+      hint1: "1. Перейдите в Настройки на Stake.",
+      hint2: "2. Откройте вкладку Общие.",
+      hint3: "3. Ваш ID — это имя пользователя (вверху).",
+      serverSeed: "Server Seed (Hashed)",
+      howToGet: "Как получить?",
+      seedHint1: "1. Перейдите в Fairness на Stake.",
+      seedHint2: "2. Выберите вкладку Next Seed.",
+      seedHint3: "3. Скопируйте Server Seed (Hashed).",
+      inputRequired: "Ввод обязателен",
+      inputDesc: "Пожалуйста, введите Server Seed (Hashed) для синхронизации AI.",
+      winSignal: "ВЫИГРЫШ",
+      fairness: "Контроль честности",
+      initializing: "Инициализация системы",
+      aiActive: "AI ПРОГНОЗ АКТИВЕН",
+      protected: "Защищено системой Stake Affiliate",
+      error: "Ошибка",
+      enterStakeId: "Пожалуйста, введите ваш Stake ID",
+      success: "Успех",
+      regVerified: "Регистрация подтверждена! Доступ разрешен.",
+      verifError: "Ошибка верификации",
+      idNotFound: "ID не найден в нашей партнерской базе. Убедитесь, что использовали верную ссылку.",
+      validationError: "Ошибка валидации",
+      invalidSeedFormat: "Неверный формат Server Seed. Ожидается 64-значный HEX код.",
+      selectMinesPlaceholder: "Выберите кол-во мин",
+      minesRange: "1-24 мины",
+      notAffiliated: "© 2024 MinesPredictor AI. Не аффилировано со Stake.com"
+    },
+    EN: {
+      regRequired: "REGISTRATION REQUIRED",
+      regDesc: "To get access to premium signals, you need to register on Stake.com using our partner link.",
+      openStake: "1. OPEN STAKE.COM",
+      enterId: "2. ENTER YOUR STAKE ID",
+      whereToFind: "Where to find?",
+      verify: "VERIFY & START",
+      verifying: "VERIFYING...",
+      signalsToday: "Signals Today",
+      analyzing: "ANALYZING...",
+      getSignal: "GET SIGNAL",
+      calculating: "ANALYZING...",
+      mines: "Mines",
+      recentActivity: "RECENT ACTIVITY",
+      hint1: "1. Go to Settings on Stake.",
+      hint2: "2. Open General tab.",
+      hint3: "3. Your ID is your Username (shown at the top).",
+      serverSeed: "Server Seed (Hashed)",
+      howToGet: "How to get?",
+      seedHint1: "1. Go to Fairness on Stake.",
+      seedHint2: "2. Select Next Seed tab.",
+      seedHint3: "3. Copy Server Seed (Hashed).",
+      inputRequired: "Input Required",
+      inputDesc: "Please enter your Server Seed (Hashed) to synchronize AI.",
+      winSignal: "WIN SIGNAL",
+      fairness: "Provably Fair Control System",
+      initializing: "Initializing System",
+      aiActive: "AI PREDICTION ACTIVE",
+      protected: "Protected by Stake Affiliate System",
+      error: "Error",
+      enterStakeId: "Please enter your Stake ID",
+      success: "Success",
+      regVerified: "Registration verified! Access granted.",
+      verifError: "Verification Error",
+      idNotFound: "ID not found in our partner database. Please ensure you used the correct link.",
+      validationError: "Validation Error",
+      invalidSeedFormat: "Invalid Server Seed format. 64-character HEX code expected.",
+      selectMinesPlaceholder: "Select mines",
+      minesRange: "1-24 mines",
+      notAffiliated: "© 2024 MinesPredictor AI. Not affiliated with Stake.com"
+    }
+  };
+
+  const handleRegister = () => {
+    window.open("https://stake.com/?c=Minebot", "_blank");
   };
 
   const handleCheckRegistration = () => {
     if (!stakeId.trim()) {
       toast({
-        title: lang === "RU" ? "Ошибка" : "Error",
-        description: lang === "RU" ? "Пожалуйста, введите ваш Stake ID" : "Please enter your Stake ID",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    const hasClickedJoin = localStorage.getItem("telegram_joined_clicked") === "true";
-    if (!hasClickedJoin) {
-      toast({
-        title: lang === "RU" ? "Ошибка" : "Error",
-        description: lang === "RU" ? "Пожалуйста, сначала подпишитесь на Telegram канал" : "Please subscribe to our Telegram channel first",
+        title: t[lang].error,
+        description: t[lang].enterStakeId,
         variant: "destructive",
       });
       return;
@@ -74,20 +147,52 @@ export default function MinesBot() {
 
     setIsChecking(true);
     setTimeout(() => {
-      localStorage.setItem("mines_bot_registered", "true");
-      localStorage.setItem("mines_bot_stake_id", stakeId);
-      localStorage.setItem("telegram_joined", "true");
-      setIsTelegramJoined(true);
-      setIsRegistered(true);
-      setIsChecking(false);
-      toast({
-        title: lang === "RU" ? "Успешно!" : "Success",
-        description: lang === "RU" ? "Регистрация подтверждена! Доступ разрешен." : "Registration verified! Access granted.",
-      });
-    }, 2000);
+      const isIndirectlyVerified = Math.random() > 0.1;
+      
+      if (isIndirectlyVerified) {
+        localStorage.setItem("mines_bot_registered", "true");
+        localStorage.setItem("mines_bot_stake_id", stakeId);
+        setIsRegistered(true);
+        setIsChecking(false);
+        toast({
+          title: t[lang].success,
+          description: t[lang].regVerified,
+        });
+      } else {
+        setIsChecking(false);
+        toast({
+          title: t[lang].verifError,
+          description: t[lang].idNotFound,
+          variant: "destructive",
+        });
+      }
+    }, 3000);
   };
 
+  const [serverSeed, setServerSeed] = useState("");
+  const [showSeedHint, setShowSeedHint] = useState(false);
+
   const handlePredict = () => {
+    if (!serverSeed.trim()) {
+      toast({
+        title: t[lang].inputRequired,
+        description: t[lang].inputDesc,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Realistic validation for SHA-256 hashed seed (64 hex chars)
+    const isValidFormat = /^[a-f0-9]{64}$/i.test(serverSeed.trim());
+    if (!isValidFormat) {
+      toast({
+        title: t[lang].validationError,
+        description: t[lang].invalidSeedFormat,
+        variant: "destructive",
+      });
+      return;
+    }
+
     setPredictedSpots([]);
     setPredictionId(prev => prev + 1);
     setStats(prev => ({ ...prev, signals: prev.signals + 1 }));
@@ -97,7 +202,7 @@ export default function MinesBot() {
       },
       onError: (error) => {
         toast({
-          title: "Error",
+          title: t[lang].error,
           description: error.message,
           variant: "destructive",
         });
@@ -122,47 +227,6 @@ export default function MinesBot() {
     }, 8000);
     return () => clearInterval(interval);
   }, []);
-
-  const [lang, setLang] = useState<"RU" | "EN">("EN");
-
-  const t = {
-    RU: {
-      regRequired: "ТРЕБУЕТСЯ РЕГИСТРАЦИЯ",
-      regDesc: "Для доступа к премиум-сигналам необходимо подписаться на наш Telegram и ввести ID.",
-      openStake: "ПОДПИСАТЬСЯ НА TELEGRAM",
-      enterId: "ВВЕДИТЕ ВАШ STAKE ID",
-      whereToFind: "Где найти?",
-      verify: "ПРОВЕРИТЬ И НАЧАТЬ",
-      verifying: "ПРОВЕРКА...",
-      signalsToday: "Сигналов сегодня",
-      analyzing: "АНАЛИЗ...",
-      getSignal: "GET SIGNAL",
-      calculating: "АНАЛИЗ...",
-      mines: "Мины",
-      recentActivity: "ПОСЛЕДНЯЯ АКТИВНОСТЬ",
-      hint1: "1. Перейдите в Настройки на Stake.",
-      hint2: "2. Откройте вкладку Общие.",
-      hint3: "3. Ваш ID — это имя пользователя (вверху)."
-    },
-    EN: {
-      regRequired: "REGISTRATION REQUIRED",
-      regDesc: "To get access to premium signals, you need to subscribe to our Telegram and enter your ID.",
-      openStake: "SUBSCRIBE TO TELEGRAM",
-      enterId: "ENTER YOUR STAKE ID",
-      whereToFind: "Where to find?",
-      verify: "VERIFY & START",
-      verifying: "VERIFYING...",
-      signalsToday: "Signals Today",
-      analyzing: "ANALYZING...",
-      getSignal: "GET SIGNAL",
-      calculating: "ANALYZING...",
-      mines: "Mines",
-      recentActivity: "RECENT ACTIVITY",
-      hint1: "1. Go to Settings on Stake.",
-      hint2: "2. Open General tab.",
-      hint3: "3. Your ID is your Username (shown at the top)."
-    }
-  };
 
   if (!isRegistered) {
     return (
@@ -191,16 +255,15 @@ export default function MinesBot() {
 
           <div className="w-full space-y-4">
             <button
-              onClick={handleJoinTelegram}
-              className={`
+              onClick={handleRegister}
+              className="
                 w-full h-12 rounded-md font-display font-bold text-sm tracking-wide
-                transition-all flex items-center justify-center gap-2
-                ${isTelegramJoined 
-                  ? "bg-primary/20 text-primary border border-primary/20" 
-                  : "bg-[#24A1DE] text-white hover:brightness-110 shadow-[0_4px_0_0_#1d82b3] active:translate-y-[2px] active:shadow-none"}
-              `}
+                bg-[#2f4553] text-white
+                hover:bg-[#3d5a6d] transition-colors
+                flex items-center justify-center gap-2
+              "
             >
-              {isTelegramJoined ? "✓ ПОДПИСАНО" : t[lang].openStake}
+              {t[lang].openStake}
             </button>
 
             <div className="space-y-2 text-left relative">
@@ -266,7 +329,7 @@ export default function MinesBot() {
           </div>
           
           <p className="text-[9px] text-muted-foreground/40 uppercase font-bold tracking-[0.2em]">
-            Protected by Stake Affiliate System
+            {t[lang].protected}
           </p>
         </motion.div>
       </div>
@@ -304,7 +367,7 @@ export default function MinesBot() {
               transition={{ duration: 2 }}
               className="h-1 bg-primary rounded-full w-48"
             />
-            <p className="text-muted-foreground text-xs font-bold tracking-widest uppercase mt-2">Initializing System</p>
+            <p className="text-muted-foreground text-xs font-bold tracking-widest uppercase mt-2">{t[lang].initializing}</p>
           </div>
         </motion.div>
       </div>
@@ -397,7 +460,7 @@ export default function MinesBot() {
           <div className="space-y-2">
             <div className="flex justify-between items-end">
               <label className="text-sm font-semibold text-white/90">{t[lang].mines}</label>
-              <span className="text-xs text-muted-foreground font-medium">1-24 mines</span>
+              <span className="text-xs text-muted-foreground font-medium">{t[lang].minesRange}</span>
             </div>
             
             <Select 
@@ -406,7 +469,7 @@ export default function MinesBot() {
               disabled={isPending}
             >
               <SelectTrigger className="h-12 bg-[#0f212e] border-[#2f4553] text-white font-semibold focus:ring-primary/20 focus:border-primary">
-                <SelectValue placeholder="Select mines" />
+                <SelectValue placeholder={t[lang].selectMinesPlaceholder} />
               </SelectTrigger>
               <SelectContent className="bg-[#0f212e] border-[#2f4553] text-white max-h-[300px]">
                 {mineOptions.map((num) => (
@@ -422,35 +485,76 @@ export default function MinesBot() {
             </Select>
           </div>
 
-          <div className="space-y-2 text-center">
-            <p className="text-xs font-medium text-muted-foreground/80 uppercase tracking-widest">
-              AI PREDICTION ACTIVE
-            </p>
-          </div>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <label className="text-[10px] font-black text-white/50 uppercase tracking-widest">
+                  {t[lang].serverSeed}
+                </label>
+                <button 
+                  onClick={() => setShowSeedHint(!showSeedHint)}
+                  className="text-[10px] font-bold text-primary hover:underline uppercase"
+                >
+                  {t[lang].howToGet}
+                </button>
+              </div>
+              
+              <AnimatePresence>
+                {showSeedHint && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="bg-[#0f212e] p-3 rounded-md border border-primary/20 mb-2 text-[11px] text-white/70 space-y-2">
+                      <p>{t[lang].seedHint1}</p>
+                      <p>{t[lang].seedHint2}</p>
+                      <p>{t[lang].seedHint3}</p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-          <button
-            onClick={handlePredict}
-            disabled={isPending}
-            className="
-              w-full h-14 rounded-md font-display font-black text-lg tracking-wide
-              bg-primary text-primary-foreground
-              hover:brightness-110 active:scale-[0.98]
-              shadow-[0_4px_0_0_#00b500] active:shadow-none active:translate-y-[4px]
-              transition-all duration-150 ease-out
-              flex items-center justify-center gap-2
-              relative overflow-hidden group
-            "
-          >
-            <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 skew-x-[-20deg]" />
-            {isPending ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                {t[lang].calculating}
-              </>
-            ) : (
-              t[lang].getSignal
-            )}
-          </button>
+              <input 
+                type="text"
+                value={serverSeed}
+                onChange={(e) => setServerSeed(e.target.value)}
+                placeholder="Example: 9b6542f8ad86..."
+                className="w-full h-11 bg-[#0f212e] border border-[#2f4553] rounded-md px-4 text-white text-xs font-mono focus:outline-none focus:border-primary transition-colors"
+              />
+            </div>
+
+            <div className="space-y-2 text-center">
+              <p className="text-xs font-medium text-muted-foreground/80 uppercase tracking-widest">
+                {t[lang].aiActive}
+              </p>
+            </div>
+
+            <button
+              onClick={handlePredict}
+              disabled={isPending}
+              className="
+                w-full h-14 rounded-md font-display font-black text-lg tracking-wide
+                bg-primary text-primary-foreground
+                hover:brightness-110 active:scale-[0.98]
+                shadow-[0_4px_0_0_#00b500] active:shadow-none active:translate-y-[4px]
+                transition-all duration-150 ease-out
+                flex items-center justify-center gap-2
+                relative overflow-hidden group
+              "
+            >
+              <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 skew-x-[-20deg]" />
+              {isPending ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  {t[lang].calculating}
+                </>
+              ) : (
+                t[lang].getSignal
+              )}
+            </button>
+          </div>
 
           <div className="mt-2 space-y-4">
             <div className="flex flex-col gap-2">
@@ -471,7 +575,7 @@ export default function MinesBot() {
                         <span className="text-[10px] text-white font-bold">{signal.user}</span>
                         <span className="text-[8px] text-muted-foreground uppercase">{t[lang].mines}: {signal.mines}</span>
                       </div>
-                      <span className="text-[8px] font-black text-primary uppercase bg-primary/5 px-1.5 py-0.5 rounded border border-primary/10">WIN SIGNAL</span>
+                      <span className="text-[8px] font-black text-primary uppercase bg-primary/5 px-1.5 py-0.5 rounded border border-primary/10">{t[lang].winSignal}</span>
                     </motion.div>
                   ))}
                 </AnimatePresence>
@@ -481,7 +585,7 @@ export default function MinesBot() {
             <div className="flex justify-center border-t border-white/5 pt-4">
                <div className="flex flex-col items-center gap-3">
                  <div className="flex items-center gap-2 text-[10px] text-[#2f4553] font-mono font-bold tracking-widest uppercase opacity-50">
-                    <span>Provably Fair Control System</span>
+                    <span>{t[lang].fairness}</span>
                  </div>
                  <div className="flex items-center gap-4 opacity-40 grayscale hover:grayscale-0 transition-all duration-300">
                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" className="h-3 w-auto" />
@@ -489,7 +593,7 @@ export default function MinesBot() {
                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" className="h-4 w-auto" />
                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" alt="Bitcoin" className="h-4 w-auto" />
                  </div>
-                 <p className="text-[9px] text-muted-foreground/30 font-medium">© 2024 MinesPredictor AI. Not affiliated with Stake.com</p>
+                 <p className="text-[9px] text-muted-foreground/30 font-medium">{t[lang].notAffiliated}</p>
                </div>
             </div>
           </div>
