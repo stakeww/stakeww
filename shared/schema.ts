@@ -24,3 +24,6 @@ export const users = pgTable("users", {
 export const insertUserSchema = createInsertSchema(users).omit({ id: true, createdAt: true });
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
+
+export type CreatePredictionRequest = { minesCount: number };
+export type PredictionResponse = { predictedSpots: number[] };
