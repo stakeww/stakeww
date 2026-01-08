@@ -14,5 +14,13 @@ export const insertPredictionSchema = createInsertSchema(predictions).omit({ id:
 
 export type Prediction = typeof predictions.$inferSelect;
 export type InsertPrediction = z.infer<typeof insertPredictionSchema>;
-export type CreatePredictionRequest = { minesCount: number };
-export type PredictionResponse = { predictedSpots: number[] };
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  stakeId: text("stake_id").notNull().unique(),
+  isSubscribed: boolean("is_subscribed").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertUserSchema = createInsertSchema(users).omit({ id: true, createdAt: true });
+export type User = typeof users.$inferSelect;
+export type InsertUser = z.infer<typeof insertUserSchema>;
