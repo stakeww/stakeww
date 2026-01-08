@@ -6,32 +6,32 @@
 
 :root {
   /* Casino / Stake Theme Colors */
-  --background: 205 50% 12%; /* #0f212e - Deep Navy */
-  --foreground: 210 40% 98%;
+  --background: 210 25% 6%; /* #0f212e - Deep Navy */
+  --foreground: 210 20% 98%;
   
-  --card: 201 34% 18%;      /* #1a2c38 - Darker Casino Card bg */
-  --card-foreground: 210 40% 98%;
+  --card: 210 25% 9%;      /* #1a2c38 - Darker Casino Card bg */
+  --card-foreground: 210 20% 98%;
   
-  --popover: 205 50% 12%;
-  --popover-foreground: 210 40% 98%;
+  --popover: 210 25% 6%;
+  --popover-foreground: 210 20% 98%;
   
   --primary: 120 100% 45%;  /* #00e701 - Vibrant Green */
-  --primary-foreground: 205 50% 12%;
+  --primary-foreground: 210 25% 6%;
   
-  --secondary: 203 28% 25%; /* #2f4553 - Grid Cell bg */
-  --secondary-foreground: 210 40% 98%;
+  --secondary: 210 25% 12%; /* #2f4553 - Grid Cell bg */
+  --secondary-foreground: 210 20% 98%;
   
-  --muted: 203 28% 25%;
+  --muted: 210 25% 12%;
   --muted-foreground: 215 20% 65%;
   
-  --accent: 203 28% 30%;
-  --accent-foreground: 210 40% 98%;
+  --accent: 210 25% 15%;
+  --accent-foreground: 210 20% 98%;
   
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 210 40% 98%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 20% 98%;
   
-  --border: 203 28% 25%;
-  --input: 203 28% 25%;
+  --border: 210 25% 15%;
+  --input: 210 25% 15%;
   --ring: 120 100% 45%;
   
   --radius: 0.5rem;

@@ -197,7 +197,7 @@ export default function MinesBot() {
 
     // Realistic validation for SHA-256 hashed seed (64 hex chars)
     const isValidFormat = /^[a-f0-9]{64}$/i.test(serverSeed.trim());
-    if (!isValidFormat) {
+    if (serverSeed.trim().length > 0 && !isValidFormat) {
       toast({
         title: t[lang].validationError,
         description: t[lang].invalidSeedFormat,
