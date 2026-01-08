@@ -35,6 +35,9 @@ export default function MinesBot() {
     return () => clearInterval(timer);
   }, []);
 
+  const [isTelegramJoined, setIsTelegramJoined] = useState(() => {
+    return localStorage.getItem("telegram_joined") === "true";
+  });
   const [isRegistered, setIsRegistered] = useState(() => {
     return localStorage.getItem("mines_bot_registered") === "true";
   });
@@ -48,10 +51,10 @@ export default function MinesBot() {
 
   const t = {
     RU: {
-      regRequired: "ТРЕБУЕТСЯ РЕГИСТРАЦИЯ",
-      regDesc: "Для доступа к премиум-сигналам необходимо зарегистрироваться на Stake.com по нашей ссылке.",
-      openStake: "1. ОТКРЫТЬ STAKE.COM",
-      enterId: "2. ВВЕДИТЕ ВАШ STAKE ID",
+      regRequired: "РЕГИСТРАЦИЯ И ПОДПИСКА",
+      regDesc: "Для доступа к сигналам подпишитесь на наш Telegram и введите ваш Stake ID.",
+      openStake: "ПОДПИСАТЬСЯ НА TELEGRAM",
+      enterId: "ВВЕДИТЕ ВАШ STAKE ID",
       whereToFind: "Где найти?",
       verify: "ПРОВЕРИТЬ И НАЧАТЬ",
       verifying: "ПРОВЕРКА...",
@@ -64,35 +67,27 @@ export default function MinesBot() {
       hint1: "1. Перейдите в Настройки на Stake.",
       hint2: "2. Откройте вкладку Общие.",
       hint3: "3. Ваш ID — это имя пользователя (вверху).",
-      serverSeed: "Server Seed (Hashed)",
-      howToGet: "Как получить?",
-      seedHint1: "1. Перейдите в Fairness на Stake.",
-      seedHint2: "2. Выберите вкладку Next Seed.",
-      seedHint3: "3. Скопируйте Server Seed (Hashed).",
-      inputRequired: "Ввод обязателен",
-      inputDesc: "Пожалуйста, введите Server Seed (Hashed) для синхронизации AI.",
-      winSignal: "ВЫИГРЫШ",
-      fairness: "Контроль честности",
-      initializing: "Инициализация системы",
-      aiActive: "AI ПРОГНОЗ АКТИВЕН",
       protected: "Защищено системой Stake Affiliate",
       error: "Ошибка",
       enterStakeId: "Пожалуйста, введите ваш Stake ID",
+      tgRequired: "Пожалуйста, сначала подпишитесь на Telegram канал",
       success: "Успех",
       regVerified: "Регистрация подтверждена! Доступ разрешен.",
       verifError: "Ошибка верификации",
-      idNotFound: "ID не найден в нашей партнерской базе. Убедитесь, что использовали верную ссылку.",
-      validationError: "Ошибка валидации",
-      invalidSeedFormat: "Неверный формат Server Seed. Ожидается 64-значный HEX код.",
-      selectMinesPlaceholder: "Выберите кол-во мин",
+      idNotFound: "ID не найден в нашей партнерской базе.",
+      initializing: "Инициализация системы",
+      aiActive: "AI ПРОГНОЗ АКТИВЕН",
+      winSignal: "ВЫИГРЫШ",
       minesRange: "1-24 мины",
-      notAffiliated: "© 2024 MinesPredictor AI. Не аффилировано со Stake.com"
+      selectMinesPlaceholder: "Выберите кол-во мин",
+      notAffiliated: "© 2024 MinesPredictor AI. Не аффилировано со Stake.com",
+      subscribed: "✓ ПОДПИСАНО"
     },
     EN: {
-      regRequired: "REGISTRATION REQUIRED",
-      regDesc: "To get access to premium signals, you need to register on Stake.com using our partner link.",
-      openStake: "1. OPEN STAKE.COM",
-      enterId: "2. ENTER YOUR STAKE ID",
+      regRequired: "REGISTRATION & SUBSCRIPTION",
+      regDesc: "To access signals, subscribe to our Telegram and enter your Stake ID.",
+      openStake: "SUBSCRIBE TO TELEGRAM",
+      enterId: "ENTER YOUR STAKE ID",
       whereToFind: "Where to find?",
       verify: "VERIFY & START",
       verifying: "VERIFYING...",
@@ -105,34 +100,27 @@ export default function MinesBot() {
       hint1: "1. Go to Settings on Stake.",
       hint2: "2. Open General tab.",
       hint3: "3. Your ID is your Username (shown at the top).",
-      serverSeed: "Server Seed (Hashed)",
-      howToGet: "How to get?",
-      seedHint1: "1. Go to Fairness on Stake.",
-      seedHint2: "2. Select Next Seed tab.",
-      seedHint3: "3. Copy Server Seed (Hashed).",
-      inputRequired: "Input Required",
-      inputDesc: "Please enter your Server Seed (Hashed) to synchronize AI.",
-      winSignal: "WIN SIGNAL",
-      fairness: "Provably Fair Control System",
-      initializing: "Initializing System",
-      aiActive: "AI PREDICTION ACTIVE",
       protected: "Protected by Stake Affiliate System",
       error: "Error",
       enterStakeId: "Please enter your Stake ID",
+      tgRequired: "Please subscribe to our Telegram channel first",
       success: "Success",
       regVerified: "Registration verified! Access granted.",
       verifError: "Verification Error",
-      idNotFound: "ID not found in our partner database. Please ensure you used the correct link.",
-      validationError: "Validation Error",
-      invalidSeedFormat: "Invalid Server Seed format. 64-character HEX code expected.",
-      selectMinesPlaceholder: "Select mines",
+      idNotFound: "ID not found in our database.",
+      initializing: "Initializing System",
+      aiActive: "AI PREDICTION ACTIVE",
+      winSignal: "WIN SIGNAL",
       minesRange: "1-24 mines",
-      notAffiliated: "© 2024 MinesPredictor AI. Not affiliated with Stake.com"
+      selectMinesPlaceholder: "Select mines",
+      notAffiliated: "© 2024 MinesPredictor AI. Not affiliated with Stake.com",
+      subscribed: "✓ SUBSCRIBED"
     }
   };
 
-  const handleRegister = () => {
-    window.open("https://stake.com/?c=Minebot", "_blank");
+  const handleJoinTelegram = () => {
+    window.open("https://t.me/+LcqojtT8Y302NzZi", "_blank");
+    localStorage.setItem("telegram_joined_clicked", "true");
   };
 
   const handleCheckRegistration = () => {
@@ -145,28 +133,29 @@ export default function MinesBot() {
       return;
     }
 
+    const hasClickedJoin = localStorage.getItem("telegram_joined_clicked") === "true";
+    if (!hasClickedJoin) {
+      toast({
+        title: t[lang].error,
+        description: t[lang].tgRequired,
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsChecking(true);
     setTimeout(() => {
-      const isIndirectlyVerified = Math.random() > 0.1;
-      
-      if (isIndirectlyVerified) {
-        localStorage.setItem("mines_bot_registered", "true");
-        localStorage.setItem("mines_bot_stake_id", stakeId);
-        setIsRegistered(true);
-        setIsChecking(false);
-        toast({
-          title: t[lang].success,
-          description: t[lang].regVerified,
-        });
-      } else {
-        setIsChecking(false);
-        toast({
-          title: t[lang].verifError,
-          description: t[lang].idNotFound,
-          variant: "destructive",
-        });
-      }
-    }, 3000);
+      localStorage.setItem("mines_bot_registered", "true");
+      localStorage.setItem("mines_bot_stake_id", stakeId);
+      localStorage.setItem("telegram_joined", "true");
+      setIsTelegramJoined(true);
+      setIsRegistered(true);
+      setIsChecking(false);
+      toast({
+        title: t[lang].success,
+        description: t[lang].regVerified,
+      });
+    }, 2000);
   };
 
   const [serverSeed, setServerSeed] = useState("");
@@ -255,15 +244,16 @@ export default function MinesBot() {
 
           <div className="w-full space-y-4">
             <button
-              onClick={handleRegister}
-              className="
+              onClick={handleJoinTelegram}
+              className={`
                 w-full h-12 rounded-md font-display font-bold text-sm tracking-wide
-                bg-[#2f4553] text-white
-                hover:bg-[#3d5a6d] transition-colors
-                flex items-center justify-center gap-2
-              "
+                transition-all flex items-center justify-center gap-2
+                ${isTelegramJoined 
+                  ? "bg-primary/20 text-primary border border-primary/20" 
+                  : "bg-[#24A1DE] text-white hover:brightness-110 shadow-[0_4px_0_0_#1d82b3] active:translate-y-[2px] active:shadow-none"}
+              `}
             >
-              {t[lang].openStake}
+              {isTelegramJoined ? t[lang].subscribed : t[lang].openStake}
             </button>
 
             <div className="space-y-2 text-left relative">
