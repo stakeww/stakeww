@@ -49,6 +49,7 @@ export default function MinesBot() {
   const [showIdHint, setShowIdHint] = useState(false);
 
   const [lang, setLang] = useState<"RU" | "EN">("EN");
+  const [history, setHistory] = useState<{id: number, mines: number, spots: number[], time: string}[]>([]);
 
   const t = {
     RU: {
@@ -68,6 +69,7 @@ export default function MinesBot() {
       hint1: "1. Перейдите в Настройки на Stake.",
       hint2: "2. Откройте вкладку Общие.",
       hint3: "3. Ваш ID — это имя пользователя (вверху).",
+      history: "ИСТОРИЯ ПРОГНОЗОВ",
       protected: "Защищено системой Stake Affiliate",
       error: "Ошибка",
       enterStakeId: "Пожалуйста, введите ваш Stake ID",
@@ -111,6 +113,7 @@ export default function MinesBot() {
       hint1: "1. Go to Settings on Stake.",
       hint2: "2. Open General tab.",
       hint3: "3. Your ID is your Username (shown at the top).",
+      history: "PREDICTION HISTORY",
       protected: "Protected by Stake Affiliate System",
       error: "Error",
       enterStakeId: "Please enter your Stake ID",
@@ -209,6 +212,12 @@ export default function MinesBot() {
     getPrediction(minesCount, {
       onSuccess: (data) => {
         setPredictedSpots(data.predictedSpots);
+        setHistory(prev => [{
+          id: Date.now(),
+          mines: minesCount,
+          spots: data.predictedSpots,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }, ...prev].slice(0, 5));
         confetti({
           particleCount: 100,
           spread: 70,
@@ -571,6 +580,32 @@ export default function MinesBot() {
                 t[lang].getSignal
               )}
             </button>
+
+            {history.length > 0 && (
+              <div className="space-y-3">
+                <span className="text-[10px] font-black text-muted-foreground/50 uppercase tracking-widest text-center block">
+                  {t[lang].history}
+                </span>
+                <div className="grid grid-cols-1 gap-2">
+                  {history.map((item) => (
+                    <div key={item.id} className="bg-[#0f212e] p-3 rounded border border-white/5 flex justify-between items-center">
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[10px] text-white font-bold">{t[lang].mines}: {item.mines}</span>
+                        <span className="text-[8px] text-muted-foreground">{item.time}</span>
+                      </div>
+                      <div className="flex gap-1">
+                        {item.spots.slice(0, 3).map((_, i) => (
+                          <div key={i} className="w-4 h-4 rounded-sm bg-primary/20 flex items-center justify-center">
+                            <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_5px_#00e701]" />
+                          </div>
+                        ))}
+                        {item.spots.length > 3 && <span className="text-[8px] text-primary self-end">+{item.spots.length - 3}</span>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="mt-2 space-y-4">
