@@ -81,7 +81,17 @@ export default function MinesBot() {
       minesRange: "1-24 мины",
       selectMinesPlaceholder: "Выберите кол-во мин",
       notAffiliated: "© 2024 MinesPredictor AI. Не аффилировано со Stake.com",
-      subscribed: "✓ ПОДПИСАНО"
+      subscribed: "✓ ПОДПИСАНО",
+      serverSeed: "Server Seed (Hashed)",
+      howToGet: "Как получить?",
+      seedHint1: "1. Перейдите в Fairness на Stake.",
+      seedHint2: "2. Выберите вкладку Next Seed.",
+      seedHint3: "3. Скопируйте Server Seed (Hashed).",
+      inputRequired: "Ввод обязателен",
+      inputDesc: "Пожалуйста, введите Server Seed (Hashed) для синхронизации AI.",
+      validationError: "Ошибка валидации",
+      invalidSeedFormat: "Неверный формат Server Seed. Ожидается 64-значный HEX код.",
+      fairness: "Контроль честности"
     },
     EN: {
       regRequired: "REGISTRATION & SUBSCRIPTION",
@@ -114,7 +124,17 @@ export default function MinesBot() {
       minesRange: "1-24 mines",
       selectMinesPlaceholder: "Select mines",
       notAffiliated: "© 2024 MinesPredictor AI. Not affiliated with Stake.com",
-      subscribed: "✓ SUBSCRIBED"
+      subscribed: "✓ SUBSCRIBED",
+      serverSeed: "Server Seed (Hashed)",
+      howToGet: "How to get?",
+      seedHint1: "1. Go to Fairness on Stake.",
+      seedHint2: "2. Select Next Seed tab.",
+      seedHint3: "3. Copy Server Seed (Hashed).",
+      inputRequired: "Input Required",
+      inputDesc: "Please enter your Server Seed (Hashed) to synchronize AI.",
+      validationError: "Validation Error",
+      invalidSeedFormat: "Invalid Server Seed format. 64-character HEX code expected.",
+      fairness: "Provably Fair Control System"
     }
   };
 
